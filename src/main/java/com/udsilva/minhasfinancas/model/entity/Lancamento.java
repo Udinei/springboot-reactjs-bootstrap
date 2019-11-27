@@ -20,13 +20,17 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import com.udsilva.minhasfinancas.model.entity.enums.StatusLancamento;
 import com.udsilva.minhasfinancas.model.entity.enums.TipoLancamento;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity // para o jpa reconhecer com uma entidade de bd
 @Table(name = "lancamento", schema = "financas")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Lancamento {
 
 	@Id

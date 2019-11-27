@@ -3,6 +3,7 @@ package com.udsilva.minhasfinancas.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.udsilva.minhasfinancas.model.entity.Lancamento;
 import com.udsilva.minhasfinancas.model.entity.enums.StatusLancamento;
+import com.udsilva.minhasfinancas.model.entity.enums.TipoLancamento;
 import com.udsilva.minhasfinancas.model.repository.LancamentoRepository;
 import com.udsilva.minhasfinancas.service.LancamentoService;
 import com.udsilva.minhasfinancas.service.exceptions.RegraNegocioException;
@@ -109,6 +111,30 @@ public class LancamentoServiceImpl implements LancamentoService {
         lancamento.setStatus(status);
         atualizar(lancamento);
 		
+	}
+
+
+	@Override
+	public Optional<Lancamento> obterPorId(Long id) {
+		return repository.findById(id);
+	}
+
+
+	@Override
+	@Transactional(readOnly=true)
+	public BigDecimal obterSaldoPorUsuario(Long id) {
+       BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.RECEITA);
+       BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.DESPESA);
+        
+       if(receitas == null){
+    	   receitas = BigDecimal.ZERO;
+       }
+       
+       if(despesas == null){
+    	   despesas = BigDecimal.ZERO;
+       }
+       
+       return receitas.subtract(despesas);
 	}
 	
 	
